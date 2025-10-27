@@ -207,4 +207,4 @@ if st.session_state.feedback:
 # Info if no role entered
 else:
     if not st.session_state.role:
-        st.info("👆 Enter a job role in Step 1 to begin your AI-powered mock interview! Check the **Settings** menu left to select your job level.")
+        st.info("👆 Enter a job role in Step 1 to begin your AI-powered mock interview! Check the **Settings** menu (>>) left to select your job level.")
