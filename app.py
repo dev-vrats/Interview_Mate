@@ -97,12 +97,21 @@ page_bg_img = """
 /* Custom styles for the centered, animated title */
 .main-title {
     text-align: center;
-    font-size: 3.5rem; /* Large font size for title */
+    font-size: 3.5rem; /* Large font size for desktop */
     font-weight: 800; /* Bold */
     color: #FFFFFF; /* Bright white */
     margin-bottom: 0px; /* Reduce space before subtitle */
     font-family: 'Helvetica Neue', Arial, sans-serif; /* Minimalist font */
     animation: fadeIn 1s ease-out; /* Apply animation */
+    white-space: nowrap; /* CRUCIAL: Forces text to stay on one line on desktop */
+}
+
+/* MEDIA QUERY FOR MOBILE: Adjust font size on smaller screens to prevent overflow/wrapping */
+@media (max-width: 600px) {
+    .main-title {
+        font-size: 2.5rem; /* Smaller font size for mobile */
+        white-space: nowrap; /* Ensure text remains on one line */
+    }
 }
 
 /* Custom styles for the centered subtitle */
@@ -135,7 +144,7 @@ page_bg_img = """
         Crucially, we rely on 'autoplay', 'muted', and 'loop' to work together.
     -->
     <video id="video-bg" autoplay muted loop playsinline> 
-        <source src="https://cdn.pixabay.com/video/2022/11/13/138770-770553751_large.mp4" type="video/mp4">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-dark-background-with-lines-45199-large.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     <div class="video-overlay"></div>
