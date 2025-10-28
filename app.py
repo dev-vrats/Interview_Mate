@@ -18,7 +18,7 @@ st.markdown("---")
 page_bg_img = """
 <style>
 .stApp {
-background-image: url("https://images.unsplash.com/photo-1672009190560-12e7bade8d09?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2940");
+background-image: url("https://images.unsplash.com/photo-1655841439659-0afc60676b70?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740");
 background-size: cover;
 background-attachment: fixed;
 background-repeat: no-repeat;
