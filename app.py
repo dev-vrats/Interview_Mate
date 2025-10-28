@@ -10,24 +10,156 @@ genai.configure(api_key="AIzaSyDXjTyyhFWhyJPOV87y7XPnjQzdMXC6kBs")
 
 # The layout is set to 'wide' for a modern look.
 st.set_page_config(page_title="InterviewMate Pro", page_icon="🤖", layout="wide") 
-st.title("InterviewMate Pro - Your AI Interview Mentor")
-st.markdown("A smarter way to practice interviews.")
-st.markdown("---")
-# ----------------- BACKGROUND IMAGE -----------------
+
+# ----------------- VIDEO BACKGROUND AND CUSTOM STYLES -----------------
 
 page_bg_img = """
 <style>
+/* Keyframe for the subtle fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- CURSOR ANIMATION ELEMENTS --- */
+@keyframes cursorPulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 0.5; }
+}
+
+#custom-cursor {
+    position: fixed;
+    width: 15px; /* Size of the custom cursor */
+    height: 15px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+    pointer-events: none; /* Crucial: allows clicks to pass through */
+    transform: translate(-50%, -50%); /* Center the dot */
+    transition: transform 0.1s ease-out, background-color 0.1s ease-out; /* Smooth movement */
+    z-index: 9999; /* Always on top */
+    /* Subtle pulsing animation */
+    animation: cursorPulse 1.5s infinite alternate;
+}
+
+/* State when hovering over interactive elements (optional, but good UX) */
+.stApp:hover #custom-cursor {
+    background-color: rgba(26, 140, 255, 0.8); /* Change color on hover to blue */
+    transform: translate(-50%, -50%) scale(1.5); /* Enlarge cursor on hover */
+    animation: none; /* Stop pulse when interacting */
+}
+/* --- END CURSOR ANIMATION ELEMENTS --- */
+
+
+/* --- VIDEO BACKGROUND STYLES --- */
+#video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -100; /* Position behind Streamlit content */
+    overflow: hidden;
+}
+
+#video-bg {
+    min-width: 100%; 
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /* Dark overlay for text readability */
+    background-color: rgba(0, 0, 0, 0.75); 
+    z-index: -99;
+}
+
 .stApp {
-background-image: url("https://images.unsplash.com/photo-1655841439659-0afc60676b70?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1740");
-background-size: cover;
-background-attachment: fixed;
-background-repeat: no-repeat;
-background-position: center;
-backdrop-filter: blur(10px);
+    /* Set app background to transparent so video can be seen */
+    background: transparent; 
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    backdrop-filter: blur(10px); /* Keep the blur effect */
+}
+
+/* Custom styles for the centered, animated title */
+.main-title {
+    text-align: center;
+    font-size: 3.5rem; /* Large font size for title */
+    font-weight: 800; /* Bold */
+    color: #FFFFFF; /* Bright white */
+    margin-bottom: 0px; /* Reduce space before subtitle */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Minimalist font */
+    animation: fadeIn 1s ease-out; /* Apply animation */
+}
+
+/* Custom styles for the centered subtitle */
+.sub-mentor-text {
+    text-align: center;
+    font-size: 1.25rem; /* Subtitle font size */
+    font-weight: 300; /* Light font weight */
+    color: #CCCCCC; /* Light gray color */
+    margin-top: 0px; /* Align closely with title */
+    margin-bottom: 1rem;
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Minimalist font */
+    animation: fadeIn 1.5s ease-out; /* Delayed animation */
+}
+
+/* Hide Streamlit's default title and markdown elements */
+.stApp header {
+    visibility: hidden;
+    height: 0;
+}
+.stApp h1 {
+    visibility: hidden;
+    height: 0;
 }
 </style>
+
+<!-- Video and Overlay container injected via st.markdown -->
+<div id="video-container">
+    <!-- 
+        Updated: Added 'playsinline' for better compatibility, especially on mobile/iOS.
+        Crucially, we rely on 'autoplay', 'muted', and 'loop' to work together.
+    -->
+    <video id="video-bg" autoplay muted loop playsinline> 
+        <source src="https://cdn.pixabay.com/video/2022/11/13/138770-770553751_large.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="video-overlay"></div>
+</div>
+
+<script>
+    // JavaScript to make the custom cursor follow the mouse
+    const cursor = document.getElementById('custom-cursor');
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+</script>
 """
 st.markdown(page_bg_img, unsafe_allow_html=True)
+
+# ----------------- CUSTOM CENTERED HEADER -----------------
+
+# Replaced st.title and st.markdown with custom HTML for centering and styling
+st.markdown('<div class="main-title">InterviewMate Pro</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-mentor-text">Your AI Interview Mentor</div>', unsafe_allow_html=True)
+
+st.markdown("---")
+# ----------------- END CUSTOM HEADER -----------------
 
 # Use gemini-2.5-flash for fast and effective generation
 MODEL = "gemini-2.5-flash" 
