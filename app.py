@@ -1,5 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
+import re # <--- NEW: Added for robust parsing
 
 # ----------------- CONFIG -----------------
 
@@ -31,9 +32,6 @@ st.markdown(page_bg_img, unsafe_allow_html=True)
 # Use gemini-2.5-flash for fast and effective generation
 MODEL = "gemini-2.5-flash" 
 
-# Use gemini-2.5-flash for fast and effective generation
-MODEL = "gemini-2.5-flash" 
-
 # ----------------- SESSION STATE -----------------
 # Initialize state variables
 if "questions" not in st.session_state:
@@ -58,8 +56,6 @@ def clear_session():
     st.session_state.user_answer = ""
     st.session_state.feedback = ""
     st.session_state.feedback_language = "Hinglish"
-    # Use st.rerun to refresh the page state and trigger a clear
-    # Note: st.rerun is more effective than the old st.experimental_rerun
     st.rerun() 
 
 # ----------------- SIDEBAR: Controls & Options -----------------
@@ -103,23 +99,24 @@ if st.session_state.role:
         with st.spinner(f"Preparing interview questions for **{st.session_state.level} {st.session_state.role}**..."):
             try:
                 model = genai.GenerativeModel(MODEL) 
-                # Enhanced Prompt with Level Context
+                
+                # --- FIX 1: STRICTER PROMPT ---
                 prompt = (
                     f"Generate 3 simple, realistic, and challenging interview questions "
                     f"for a **{st.session_state.level} {st.session_state.role}** position. "
                     f"Ensure the questions are appropriate for the selected level. "
-                    f"Format them as a numbered list."
+                    f"Format them **strictly as a numbered list (1. Question, 2. Question, 3. Question)** with NO extra introductory or concluding text, notes, or explanations whatsoever."
                 )
                 response = model.generate_content(prompt)
                 
-                # Split and clean the response text
-                st.session_state.questions = [
-                    q.strip() for q in response.text.split("\n") 
-                    if q.strip() and len(q.strip()) > 5 and (q.strip()[0].isdigit() or "*" in q.strip() or "-" in q.strip())
-                ]
+                # --- FIX 2: ROBUST PARSING WITH REGEX ---
+                # Use regex to find lines starting with a number, a period, and optional whitespace.
+                # This ensures we only capture the actual numbered questions.
+                question_lines = re.findall(r"^\s*\d+\.\s*(.+)", response.text, re.MULTILINE)
+                st.session_state.questions = [q.strip() for q in question_lines if q.strip()]
                 
-                if not st.session_state.questions: # Fallback in case of poor formatting
-                    st.session_state.questions = [response.text]
+                if not st.session_state.questions: # Fallback for completely malformed response
+                    st.session_state.questions = ["Could not generate specific questions. Please try again or refine the role."]
 
 
             except Exception as e:
@@ -134,6 +131,7 @@ if st.session_state.role:
         questions_container = st.container(border=True)
         with questions_container:
             for i, question in enumerate(st.session_state.questions):
+                # The question text is already clean, so we just prefix it here.
                 st.write(f"**Q{i+1}:** {question}")
 
         st.markdown("---")
@@ -202,7 +200,6 @@ if st.session_state.feedback:
     feedback_container = st.container(border=True)
     with feedback_container:
         st.markdown(st.session_state.feedback)
-        # st.balloons() is REMOVED here as requested.
 
 # Info if no role entered
 else:
