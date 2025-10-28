@@ -144,7 +144,7 @@ page_bg_img = """
         Crucially, we rely on 'autoplay', 'muted', and 'loop' to work together.
     -->
     <video id="video-bg" autoplay muted loop playsinline> 
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-dark-background-with-lines-45199-large.mp4" type="video/mp4">
+        <source src="https://cdn.pixabay.com/video/2022/11/13/138770-770553751_large.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     <div class="video-overlay"></div>
@@ -220,10 +220,10 @@ with st.sidebar:
     
 
 # ----------------- Step 1: Enter Job Role -----------------
-st.subheader("1. 🧑‍💻 Define Your Role and Level")
+st.subheader("Define Your Role and Level")
 role_input = st.text_input("Enter the specific job role:", 
                           value=st.session_state.role, 
-                          placeholder="e.g., Python Developer, UX Designer, Financial Analyst")
+                          placeholder="e.g., Software Developer, Psychologist, Financial Analyst...")
 
 # Check if role or level changed to trigger new questions
 level_changed = st.session_state.level != st.session_state.get("last_level", "Junior/Entry")
@@ -345,4 +345,4 @@ if st.session_state.feedback:
 # Info if no role entered
 else:
     if not st.session_state.role:
-        st.info("👆 Enter a job role in Step 1 to begin your AI-powered mock interview! Check the **Settings** menu (>>) left to select your job level.")
+        st.info("Enter a job role to start your AI mock interview! Adjust your job level in Settings (>>)")
