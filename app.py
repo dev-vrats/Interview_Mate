@@ -6,7 +6,7 @@ import re # <--- NEW: Added for robust parsing
 
 # Using your placeholder API key
 # REMINDER: Replace with your actual key for deployment.
-genai.configure(api_key="AIzaSyDXjTyyhFWhyJPOV87y7XPnjQzdMXC6kBs")
+genai.configure(api_key="AIzaSyCoPwOwVHY8Z4yJcigjrATaGvKDNty2Ugo")
 
 # The layout is set to 'wide' for a modern look.
 st.set_page_config(page_title="InterviewMate Pro", page_icon="🤖", layout="wide") 
