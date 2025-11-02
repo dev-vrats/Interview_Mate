@@ -1,2 +1,2 @@
-# Python environment files
-.env
+# Ignore Streamlit secrets
+.streamlit/
